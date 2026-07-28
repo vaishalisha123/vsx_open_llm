@@ -6,14 +6,36 @@ def get_relevant_knowledge(user_message):
     message = user_message.lower()
 
     if any(word in message for word in [
-        "about",
-        "vision scalex",
-        "visionscalex",
-        "company",
-        "who are you"
+            "pricing",
+            "price",
+            "cost",
+            "plans",
+            "package",
+            "packages",
+            "fee",
+            "fees",
+            "charge",
+            "charges",
+            "how much",
+            "how much does"
     ]):
-        return VSX_KNOWLEDGE["about"]
-
+        return """
+              VisionScaleX provides customized pricing based on business requirements.
+        
+              Pricing depends on:
+            • GTM requirements
+            • Target market size
+            • Automation needs
+            • Outreach volume
+        
+              For detailed pricing:
+        
+              Sales Email:
+              sales@visionscalex.com
+        
+              Website:
+             www.visionscalex.com
+             """
 
     elif any(word in message for word in [
         "mission",
@@ -85,31 +107,19 @@ def get_relevant_knowledge(user_message):
     ]):
         return VSX_KNOWLEDGE["contact"]
 
-    elif any(word in message for word in [
-        "price",
-        "pricing",
-        "cost",
-        "plan",
-        "package"
-    ]):
-
-        return """
-      VisionScaleX provides customized pricing based on business requirements.
-
-      Pricing depends on:
-    • GTM requirements
-    • Target market size
-    • Automation needs
-    • Outreach volume
-
-      For detailed pricing:
-
-      Sales Email:
-      sales@visionscalex.com
-
-      Website:
-     www.visionscalex.com
-     """
+    if any(word in message for word in [
+            "about",
+            "vision scalex",
+            "visionscalex",
+            "company",
+            "about visionscalex",
+            "what is visionscalex",
+            "who are you",
+            "tell me about the company",
+            "company overview",
+            "about you"
+        ]):
+            return VSX_KNOWLEDGE["about"]
 
 
     return ""
