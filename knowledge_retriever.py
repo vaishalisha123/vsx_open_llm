@@ -6,6 +6,27 @@ def get_relevant_knowledge(user_message):
     message = user_message.lower()
 
     if any(word in message for word in [
+        "hi",
+        "hello",
+        "hey",
+        "hii",
+        "good morning",
+        "good afternoon",
+        "good evening"
+    ]):
+
+        return """
+        You are VisionScaleX AI Assistant.
+
+        Respond warmly:
+
+        Hi! 👋 Welcome to VisionScaleX.
+
+        I can help you with information about our services, solutions, pricing, industries, framework, and contact details.
+
+        How can I assist you today?
+        """
+    elif any(word in message for word in [
             "pricing",
             "price",
             "cost",
@@ -90,7 +111,11 @@ def get_relevant_knowledge(user_message):
     elif any(word in message for word in [
         "result",
         "case study",
-        "success"
+        "success",
+        "case studies",
+        "proof",
+        "relevant work",
+        "relevant proof",
     ]):
         return VSX_KNOWLEDGE["results"]
 
