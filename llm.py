@@ -25,7 +25,6 @@ logging.basicConfig(
 # -------------------- HF Client --------------------
 
 client = InferenceClient(
-    provider="hf-inference",
     api_key=os.getenv("HF_TOKEN")
 )
 
