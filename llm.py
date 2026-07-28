@@ -1,13 +1,13 @@
-import torch
+import os
 import logging
-from transformers import AutoTokenizer, AutoModelForCausalLM
+
+from huggingface_hub import InferenceClient
 
 from config import (
     MODEL_NAME,
     MAX_NEW_TOKENS,
     TEMPERATURE,
-    TOP_P,
-    REPETITION_PENALTY
+    TOP_P
 )
 
 from prompts import CHATBOT_PROMPT
@@ -22,18 +22,12 @@ logging.basicConfig(
 )
 
 
-# -------------------- Load Model --------------------
+# -------------------- HF Client --------------------
 
-logging.info("Loading Tokenizer...")
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-
-logging.info("Loading Model...")
-model = AutoModelForCausalLM.from_pretrained(
-    MODEL_NAME,
-    dtype=torch.float32
+client = InferenceClient(
+    provider="hf-inference",
+    api_key=os.getenv("HF_TOKEN")
 )
-
-logging.info(f"Model '{MODEL_NAME}' loaded successfully.")
 
 
 # -------------------- Conversation History --------------------
@@ -49,20 +43,20 @@ def generate_response(
     max_new_tokens=MAX_NEW_TOKENS,
     temperature=TEMPERATURE,
     top_p=TOP_P,
-    repetition_penalty=REPETITION_PENALTY
 ):
+
     global conversation_history
 
     try:
 
         logging.info(f"User Message: {user_message}")
 
-        # Retrieve only relevant company knowledge
+        # Retrieve company knowledge
         knowledge = get_relevant_knowledge(user_message)
 
         logging.info(f"Retrieved Knowledge:\n{knowledge}")
 
-        # Save current user message
+        # Save user message
         conversation_history.append(
             {
                 "role": "user",
@@ -70,7 +64,7 @@ def generate_response(
             }
         )
 
-        # Build conversation
+        # Build messages
         messages = [
             {
                 "role": "system",
@@ -86,37 +80,16 @@ COMPANY_KNOWLEDGE:
 
         messages.extend(conversation_history)
 
-        # Convert into chat template
-        text = tokenizer.apply_chat_template(
-            messages,
-            tokenize=False,
-            add_generation_prompt=True
+        # Call Hugging Face Inference API
+        completion = client.chat.completions.create(
+            model=MODEL_NAME,
+            messages=messages,
+            max_tokens=max_new_tokens,
+            temperature=temperature,
+            top_p=top_p,
         )
 
-        inputs = tokenizer(
-            text,
-            return_tensors="pt"
-        )
-
-        # Generate response
-        with torch.inference_mode():
-
-            outputs = model.generate(
-                **inputs,
-                max_new_tokens=max_new_tokens,
-                temperature=temperature,
-                top_p=top_p,
-                do_sample=True,
-                repetition_penalty=repetition_penalty,
-                eos_token_id=tokenizer.eos_token_id,
-                pad_token_id=tokenizer.eos_token_id
-            )
-
-        # Decode response
-        response = tokenizer.decode(
-            outputs[0][inputs["input_ids"].shape[1]:],
-            skip_special_tokens=True
-        )
+        response = completion.choices[0].message.content
 
         # Save assistant response
         conversation_history.append(
@@ -129,7 +102,6 @@ COMPANY_KNOWLEDGE:
         # Keep only last 10 messages
         conversation_history = conversation_history[-10:]
 
-        logging.info(f"Conversation History:\n{conversation_history}")
         logging.info(f"Assistant Response: {response}")
 
         return response
