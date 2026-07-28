@@ -1,4 +1,4 @@
-MODEL_NAME= "Qwen/Qwen2.5-0.5B-Instruct"
+MODEL_NAME= "microsoft/Phi-3.5-mini-instruct"
 MAX_NEW_TOKENS= 500
 TEMPERATURE= 0.8
 TOP_P = 0.9

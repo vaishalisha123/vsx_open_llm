@@ -25,6 +25,7 @@ logging.basicConfig(
 # -------------------- HF Client --------------------
 
 client = InferenceClient(
+    model=MODEL_NAME,
     api_key=os.getenv("HF_TOKEN")
 )
 
@@ -94,7 +95,7 @@ COMPANY_KNOWLEDGE:
         conversation_history.append(
             {
                 "role": "assistant",
-                "content": response
+                "content": response 
             }
         )
 
