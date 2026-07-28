@@ -1,4 +1,4 @@
-MODEL_NAME= "microsoft/Phi-3.5-mini-instruct"
+MODEL_NAME= "meta-llama/Llama-3.1-8B-Instruct"
 MAX_NEW_TOKENS= 500
 TEMPERATURE= 0.8
 TOP_P = 0.9
