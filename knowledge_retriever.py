@@ -80,9 +80,36 @@ def get_relevant_knowledge(user_message):
         "address",
         "headquarter",
         "headquarters",
-        "website"
+        "website",
+        "connect"
     ]):
         return VSX_KNOWLEDGE["contact"]
+
+    elif any(word in message for word in [
+        "price",
+        "pricing",
+        "cost",
+        "plan",
+        "package"
+    ]):
+
+        return """
+      VisionScaleX provides customized pricing based on business requirements.
+
+      Pricing depends on:
+    • GTM requirements
+    • Target market size
+    • Automation needs
+    • Outreach volume
+
+      For detailed pricing:
+
+      Sales Email:
+      sales@visionscalex.com
+
+      Website:
+     www.visionscalex.com
+     """
 
 
     return ""
