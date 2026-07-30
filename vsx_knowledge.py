@@ -1769,6 +1769,239 @@ Our Account-Based Marketing approach helps organizations:
 
 VisionScaleX combines AI, commercial intelligence, automation, and personalization to deliver scalable, high-performing Account-Based Marketing strategies.
 """
+
+# -------------------- Office Information --------------------
+
+OFFICE_KEYWORDS = [
+    "office",
+    "location",
+    "located",
+    "where are you located",
+    "where is your office",
+    "address",
+    "headquarters",
+    "hq",
+    "company address",
+    "where can i find you"
+]
+
+
+OFFICE_RESPONSE = """
+VisionScaleX LLC is located at:
+
+30 N Gould St Ste R,
+Sheridan, WY 82801,
+USA
+
+Our team operates from this location and provides AI-powered solutions,
+automation services, and technology consulting for businesses.
+"""
+INVALID_INPUTS = [
+    "asdfghjkl",
+    "asdf",
+    "asdfgh",
+    "qwerty",
+    "qwertyuiop",
+    "xyz",
+    "abc",
+    "abcd",
+    "aaaa",
+    "aaaaaa",
+    "bbbb",
+    "random",
+    "randomtext",
+    "random123",
+    "test",
+    "testing",
+    "test123",
+    "demo",
+    "demo123",
+    "check",
+    "checking",
+    "hello123",
+    "hi123",
+    "abc123",
+    "123",
+    "1234",
+    "12345",
+    "123456",
+    "0000",
+    "1111",
+    "9999",
+    "987654",
+    "098765",
+    "////",
+    "....",
+    ".....",
+    "!!!!",
+    "????",
+    "@@@@",
+    "###",
+    "$$$",
+    "%%%%",
+    "^&*",
+    "*&^%",
+    "()()",
+    "[][]",
+    "{}{}",
+    "qazwsx",
+    "wsxedc",
+    "zxcvbn",
+    "poiuy",
+    "lkjhg",
+    "mnbvc",
+    "hahaha",
+    "lol",
+    "lolol",
+    "hehe",
+    "blah",
+    "blahblah",
+    "nothing",
+    "no idea",
+    "dont know",
+    "unknown",
+    "null",
+    "none",
+    "undefined",
+    "error",
+    "404",
+    "sample",
+    "example",
+    "input",
+    "output",
+    "message",
+    "chatbot",
+    "bot",
+    "ai",
+    "hello bot",
+    "hi bot",
+    "random question",
+    "tell me a joke",
+    "tell me jokes",
+    "make me laugh",
+    "say something funny",
+    "funny joke",
+    "joke please",
+    "can you joke",
+    "tell a funny story",
+    "tell me a story",
+    "write a story",
+    "create a story",
+    "short story",
+    "bedtime story",
+    "fairy tale",
+    "fiction story",
+    "write a poem",
+    "write poetry",
+    "make a poem",
+    "sing a song",
+    "sing something",
+    "lyrics",
+    "write lyrics",
+    "movie recommendation",
+    "recommend a movie",
+    "best movies",
+    "suggest a series",
+    "tv shows",
+    "anime recommendation",
+    "game recommendation",
+
+    # General knowledge unrelated
+    "what is the capital",
+    "who is the president",
+    "who is prime minister",
+    "who won the match",
+    "latest news",
+    "current affairs",
+    "world news",
+    "history question",
+    "tell me history",
+    "science question",
+    "physics question",
+    "chemistry question",
+    "biology question",
+    "explain quantum physics",
+    "what is gravity",
+    "what is black hole",
+    "space facts",
+    "tell me about planets",
+
+    # Personal assistant type queries
+    "remind me",
+    "set a reminder",
+    "create a reminder",
+    "set alarm",
+    "wake me up",
+    "make a schedule",
+    "plan my day",
+    "write my resume",
+    "write my cv",
+    "write an email",
+    "draft an email",
+    "write a letter",
+    "translate this",
+    "translate english",
+    "translate hindi",
+
+    # Weather
+    "weather",
+    "today weather",
+    "weather forecast",
+    "temperature today",
+    "will it rain",
+    "is it raining",
+    "weather update",
+
+    # Food / lifestyle
+    "recipe",
+    "how to cook",
+    "food recipe",
+    "best restaurant",
+    "what should i eat",
+    "diet plan",
+    "workout plan",
+    "exercise routine",
+
+    # Personal opinion
+    "what is your favorite",
+    "what do you like",
+    "do you like me",
+    "who is your favorite person",
+    "what do you think about",
+    "give your opinion",
+    "your opinion",
+
+    # Random AI questions
+    "are you human",
+    "are you real",
+    "do you have feelings",
+    "do you sleep",
+    "do you dream",
+    "can you think",
+    "who created you",
+    "what are you doing",
+    "where do you live",
+
+    # Games
+    "play a game",
+    "let's play",
+    "play chess",
+    "play quiz",
+    "ask me a question",
+    "give me a quiz"
+]
+
+
+INVALID_RESPONSE = """
+I think the question is outside my current scope.
+
+I can help you with information about VisionScaleX, our services,
+AI solutions, automation, technology, pricing, and business queries.
+
+Please feel free to ask me something related to VisionScaleX.
+"""
+
+
 STATIC_KNOWLEDGE = [
 
     (GREETING_KEYWORDS, GREETING_RESPONSE),
@@ -1816,6 +2049,10 @@ STATIC_KNOWLEDGE = [
     (DEMO_KEYWORDS, DEMO_RESPONSE),
 
     (CONTACT_KEYWORDS, CONTACT_RESPONSE),
+
+    (OFFICE_KEYWORDS, OFFICE_RESPONSE),
+
+    (INVALID_INPUTS, INVALID_RESPONSE)
 
 ]
 
