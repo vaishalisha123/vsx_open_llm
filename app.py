@@ -24,3 +24,4 @@ class UserMessage(BaseModel):
 def chat(request: UserMessage):
     reply= generate_response(user_message= request.message)
     return {"reply": reply}
+

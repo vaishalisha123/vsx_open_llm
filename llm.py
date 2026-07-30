@@ -1,7 +1,10 @@
+import time
 import os
 import logging
-
+import traceback
+from dotenv import load_dotenv
 from huggingface_hub import InferenceClient
+load_dotenv()
 
 from config import (
     MODEL_NAME,
@@ -11,8 +14,7 @@ from config import (
 )
 
 from prompts import CHATBOT_PROMPT
-from knowledge_retriever import get_relevant_knowledge
-
+from vsx_knowledge import get_static_response
 
 # -------------------- Logging --------------------
 
@@ -44,18 +46,20 @@ def generate_response(
     temperature=TEMPERATURE,
     top_p=TOP_P,
 ):
-
+    user_message= user_message.strip().lower()
+    static_response= get_static_response(user_message)
+    if static_response:
+        logging.info("Static response found, skipping LLM.")
+        return static_response
+    
     global conversation_history
+
 
     try:
 
-        logging.info(f"User Message: {user_message}")
+        logging.info(f"User Message:{user_message}")
 
-        # Retrieve company knowledge
-        knowledge = get_relevant_knowledge(user_message)
-
-        logging.info(f"Retrieved Knowledge:\n{knowledge}")
-
+        
         # Save user message
         conversation_history.append(
             {
@@ -64,23 +68,23 @@ def generate_response(
             }
         )
 
+        #-------------------------------
         # Build messages
+        #-------------------------------
+        t1= time.perf_counter()
         messages = [
             {
                 "role": "system",
-                "content": f"""
-{system_prompt}
+                "content": {system_prompt}
 
-COMPANY_KNOWLEDGE:
-
-{knowledge}
-"""
             }
         ]
 
         messages.extend(conversation_history)
+        logging.info(f"Prompt Building: {(time.perf_counter()-t1)*1000:.2f}ms")
 
         # Call Hugging Face Inference API
+        t2 = time.perf_counter()
         completion = client.chat.completions.create(
             model=MODEL_NAME,
             messages=messages,
@@ -88,10 +92,14 @@ COMPANY_KNOWLEDGE:
             temperature=temperature,
             top_p=top_p,
         )
-
+        logging.info(
+            f"LLM Inference: {(time.perf_counter()-t2)*1000:.2f} ms"
+        )
         response = completion.choices[0].message.content
 
         # Save assistant response
+
+        t3 = time.perf_counter()
         conversation_history.append(
             {
                 "role": "assistant",
@@ -101,6 +109,9 @@ COMPANY_KNOWLEDGE:
 
         # Keep only last 10 messages
         conversation_history = conversation_history[-10:]
+        logging.info(
+            f"Response Processing: {(time.perf_counter()-t3)*1000:.2f} ms"
+        )
 
         logging.info(f"Assistant Response: {response}")
 
@@ -111,5 +122,9 @@ COMPANY_KNOWLEDGE:
         logging.error(
             f"[LLM Error] {type(e).__name__}: {e}"
         )
+        logging.exception("LLM Error")
 
-        return "Sorry, I'm having trouble responding right now. Please try again."
+        traceback.print_exc()
+
+
+        return "Sorry, I'm having trouble responding right now. Please try again later."
