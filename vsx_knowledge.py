@@ -205,8 +205,6 @@ If you have any questions related to VisionScaleX, I'd be happy to help.
 
 STATIC_KNOWLEDGE = [
 
-    (GREETINGS, GREETING_RESPONSE),
-
     (CONTACT_KEYWORDS, CONTACT_RESPONSE),
 
     (PRICING_KEYWORDS, PRICING_RESPONSE),
@@ -217,7 +215,7 @@ STATIC_KNOWLEDGE = [
 
     (BYE_KEYWORDS, BYE_RESPONSE),
 
-    (OUT_OF_SCOPE_KEYWORDS, OUT_OF_SCOPE_RESPONSE),
+    (OUT_OF_SCOPE_KEYWORDS, OUT_OF_SCOPE_RESPONSE)
 
 ]
 
@@ -229,6 +227,24 @@ STATIC_KNOWLEDGE = [
 def get_static_response(query):
 
     query = query.lower().strip()
+
+    # -------------------------
+    # Greeting (Exact Match Only)
+    # -------------------------
+
+    if query in GREETINGS:
+
+        print("=" * 60)
+        print("STATIC KNOWLEDGE HIT")
+        print("CATEGORY: Greeting")
+        print("QUERY   :", query)
+        print("=" * 60)
+
+        return GREETING_RESPONSE
+
+    # -------------------------
+    # Other Static Knowledge
+    # -------------------------
 
     for keywords, response in STATIC_KNOWLEDGE:
 
