@@ -15,6 +15,12 @@ def get_static_response(query):
 
             if re.search(pattern, query):
 
+                print("=" * 60)
+                print("QUERY           :", query)
+                print("MATCHED KEYWORD :", keyword)
+                print("RESPONSE START  :", response[:120])
+                print("=" * 60)
+
                 return response
 
     return None
