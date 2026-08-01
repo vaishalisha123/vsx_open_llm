@@ -1,3 +1,4 @@
+import re
 GREETINGS = [
     "hi",
     "hello",
@@ -197,3 +198,52 @@ I'm here to answer questions specifically about VisionScaleX, our services, solu
 
 If you have any questions related to VisionScaleX, I'd be happy to help.
 """
+
+# ---------------------------------------------
+# Static Knowledge Mapping
+# ---------------------------------------------
+
+STATIC_KNOWLEDGE = [
+
+    (GREETINGS, GREETING_RESPONSE),
+
+    (CONTACT_KEYWORDS, CONTACT_RESPONSE),
+
+    (PRICING_KEYWORDS, PRICING_RESPONSE),
+
+    (DEMO_KEYWORDS, DEMO_RESPONSE),
+
+    (THANKS_KEYWORDS, THANKS_RESPONSE),
+
+    (BYE_KEYWORDS, BYE_RESPONSE),
+
+    (OUT_OF_SCOPE_KEYWORDS, OUT_OF_SCOPE_RESPONSE),
+
+]
+
+
+# ---------------------------------------------
+# Static Response Matcher
+# ---------------------------------------------
+
+def get_static_response(query):
+
+    query = query.lower().strip()
+
+    for keywords, response in STATIC_KNOWLEDGE:
+
+        for keyword in keywords:
+
+            pattern = r"\b" + re.escape(keyword.lower()) + r"\b"
+
+            if re.search(pattern, query):
+
+                print("=" * 60)
+                print("STATIC KNOWLEDGE HIT")
+                print("QUERY   :", query)
+                print("KEYWORD :", keyword)
+                print("=" * 60)
+
+                return response
+
+    return None
