@@ -34,8 +34,7 @@ GREETING_KEYWORDS = [
     "good morning",
     "good afternoon",
     "good evening",
-    "greetings",
-    "yo"
+    "greetings"
 
 ]
 

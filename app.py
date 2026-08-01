@@ -22,6 +22,13 @@ class UserMessage(BaseModel):
 
 @app.post("/chat")
 def chat(request: UserMessage):
-    reply= generate_response(user_message= request.message)
+
+    print("🔥 API HIT FROM FRONTEND")
+    print("MESSAGE:", request.message)
+
+    reply = generate_response(
+        user_message=request.message
+    )
+
     return {"reply": reply}
 

@@ -49,6 +49,7 @@ def generate_response(
     user_message= user_message.strip().lower()
     static_response= get_static_response(user_message)
     if static_response:
+        print("Static Knowledge Hit")
         logging.info("Static response found, skipping LLM.")
         return static_response
     
@@ -75,7 +76,7 @@ def generate_response(
         messages = [
             {
                 "role": "system",
-                "content": {system_prompt}
+                "content": system_prompt
 
             }
         ]
@@ -95,6 +96,7 @@ def generate_response(
         logging.info(
             f"LLM Inference: {(time.perf_counter()-t2)*1000:.2f} ms"
         )
+
         response = completion.choices[0].message.content
 
         # Save assistant response
