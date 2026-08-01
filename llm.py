@@ -2,6 +2,7 @@ import time
 import os
 import logging
 import traceback
+from company_context import COMPANY_CONTEXT
 from dotenv import load_dotenv
 from huggingface_hub import InferenceClient
 load_dotenv()
@@ -74,12 +75,19 @@ def generate_response(
         #-------------------------------
         t1= time.perf_counter()
         messages = [
-            {
-                "role": "system",
-                "content": system_prompt
+    {
+        "role": "system",
+        "content": f"""
+{system_prompt}
 
-            }
-        ]
+========================
+VISIONSCALEX KNOWLEDGE
+========================
+
+{COMPANY_CONTEXT}
+"""
+    }
+]
 
         messages.extend(conversation_history)
         logging.info(f"Prompt Building: {(time.perf_counter()-t1)*1000:.2f}ms")
