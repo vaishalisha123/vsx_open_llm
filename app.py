@@ -1,6 +1,8 @@
+import time
 from fastapi import FastAPI
 from pydantic import BaseModel
-from llm import generate_response
+from fastapi.responses import StreamingResponse
+from llm import generate_stream
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -20,15 +22,21 @@ def home():
 class UserMessage(BaseModel):
     message: str
 
-@app.post("/chat")
-def chat(request: UserMessage):
 
-    print("🔥 API HIT FROM FRONTEND")
-    print("MESSAGE:", request.message)
+@app.get("/test-stream")
+def test_stream():
 
-    reply = generate_response(
-        user_message=request.message
+    def fake():
+
+        for i in range(10):
+            yield f"Token {i}\n"
+            time.sleep(1)
+
+    return StreamingResponse(
+        fake(),
+        media_type="text/plain",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no"
+        }
     )
-
-    return {"reply": reply}
-

@@ -40,7 +40,7 @@ conversation_history = []
 
 # -------------------- Generate Response --------------------
 
-def generate_response(
+def generate_stream(
     user_message,
     system_prompt=CHATBOT_PROMPT,
     max_new_tokens=MAX_NEW_TOKENS,
@@ -52,9 +52,8 @@ def generate_response(
     if static_response:
         print("Static Knowledge Hit")
         logging.info("Static response found, skipping LLM.")
-        return static_response
-    
-    global conversation_history
+        yield static_response
+        return
 
 
     try:
@@ -94,38 +93,54 @@ VISIONSCALEX KNOWLEDGE
 
         # Call Hugging Face Inference API
         t2 = time.perf_counter()
-        completion = client.chat.completions.create(
+        stream = client.chat.completions.create(
             model=MODEL_NAME,
             messages=messages,
             max_tokens=max_new_tokens,
             temperature=temperature,
             top_p=top_p,
+            stream=True
         )
+        logging.info("Streaming started...")
+
+        full_response = ""
+        for chunk in stream:
+
+            print(chunk)
+
+            delta = chunk.choices[0].delta
+
+            if delta and delta.content:
+
+                token = delta.content
+
+                print("TOKEN:", repr(token), flush=True)
+
+                full_response += token
+
+                yield token
+
         logging.info(
-            f"LLM Inference: {(time.perf_counter()-t2)*1000:.2f} ms"
-        )
-
-        response = completion.choices[0].message.content
-
+                    f"Streaming completed in: {(time.perf_counter()-t2)*1000:.2f} ms"
+                )
         # Save assistant response
 
         t3 = time.perf_counter()
         conversation_history.append(
             {
                 "role": "assistant",
-                "content": response 
+                "content": full_response
             }
         )
 
         # Keep only last 10 messages
-        conversation_history = conversation_history[-10:]
+        conversation_history[:] = conversation_history[-10:]
         logging.info(
             f"Response Processing: {(time.perf_counter()-t3)*1000:.2f} ms"
         )
 
-        logging.info(f"Assistant Response: {response}")
+        logging.info(f"Assistant Response: {full_response}")
 
-        return response
 
     except Exception as e:
 
@@ -137,4 +152,4 @@ VISIONSCALEX KNOWLEDGE
         traceback.print_exc()
 
 
-        return "Sorry, I'm having trouble responding right now. Please try again later."
+        yield "Sorry, I'm having trouble responding right now. Please try again later."
